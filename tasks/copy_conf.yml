@@ -1,0 +1,12 @@
+- name: "Copy directories to volumes"
+  shell: |
+    docker cp /tmp/{{conf_file.value.directory}} tmpvol:/{{ item }}
+  with_items: "{{ conf_file.value.volumes }}"
+  when: "'directory' in conf_file.value"
+
+- name: "Copy config files to volumes"
+  #mount points from defaults/main#rancher_volumes
+  shell: |
+    docker cp /tmp/{{conf_file.key}} tmpvol:/{{ item }}
+  with_items: "{{ conf_file.value.volumes }}"
+  when: "'directory' not in conf_file.value"

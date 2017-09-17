@@ -1,0 +1,84 @@
+#alpine image used for volume manipulation
+alpine_image: forgottenbeast/alpine:multiarch
+#
+###################CIDR of the network that will be able to access vpn enabled
+#containers
+HOST_NET: "192.168.0.0/24"
+
+#############################virtual IPs and interface to assign containers to
+IP_ADDRESSES:
+#  eth0: 192.168.0.28
+#when we want to use them just add them in ports in the containers section
+
+##########################################################################
+#use same keys as docker_container module
+#started: the container is running
+#present: the container is here
+#stopped: the container is not running
+#absent: the container is not here
+#undefined containers present in CONTAINERS are considered as started
+
+#WE ONLY RUN POST START COMMAND IF SERVICE IS EXPLICITLY STARTED
+SERVICE_STATUS:
+  sshd: started
+  vpnd: started
+
+#  vpnd: stop
+#tells ansible what to do with this specific service, if unset and services
+#tagged task is called it will try to start it
+#or leave empty so rancherOS does not touch it
+
+################################################################################
+
+#mount point list must agree with rc.local in vault
+MOUNT_POINTS:
+  hard_drives:
+    - "/mnt/hd1"
+    - "/mnt/hd2"
+  mhddfs: "/mnt/all_hds"
+
+################################################################################
+####################CERTIFICATES for vpn enabled services
+VPN_SERVICES_CERTS:
+  monservice1:
+    endpoint: "endpoint inventory_hostname"
+    service: "servicename"
+    #service name such as vpnd, the one used on the remote end
+
+###################CONFIGURATION FILES
+config_files:
+  #file name
+  whatever.conf:
+    #optional: should this conf file be in a directory?
+    directory: whatever_config
+    #in which volumes should this conf file be copied
+    volumes:
+      - "vol1_conf"
+      - "vol2_conf"
+  
+####################volumes to create
+
+rancher_volumes:
+# servicename_type
+  - "vol1_conf"
+  - "vol2_conf"
+  - "vol1_vpn"
+
+####################CONTAINERS
+#everything but image is optional
+CONTAINERS:
+  #running container name
+  mycontainer:
+    #ip here from IP_ADDRESSES variable
+    ports: "192.168.0.28:80:80"
+    devices:
+      - "/dev/mydevice1:/dev/mydevice1"
+    image: "myrepo/myimage:multiarch"
+    volumes:
+        - "vol1_conf:/conf"
+        - "vol1_vpn:/vpn"
+    capabilities:
+      - MAKE_COFFEE
+    #WE ONLY RUN POST START COMMAND IF SERVICE IS EXPLICITLY STARTED
+    #in SERVICE_STATUS
+    command: "make_coffee --double-espresso"

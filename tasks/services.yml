@@ -1,0 +1,17 @@
+- name: "Update containers status"
+  docker_container:
+    name: "{{ container.key }}"
+    ports: "{{ container.value.ports|default(omit) }}"
+    state: "{{ SERVICE_STATUS[container.key] | default('started') }}"
+    capabilities: "{{ container.value.capabilities|default(omit) }}"
+    volumes: "{{ container.value.volumes |default(omit)}}"
+    image: "{{ container.value.image }}"
+    devices: "{{ container.value.devices|default(omit) }}"
+
+- name: "Run post start commands"
+  command: docker exec -i {{ container.key }} {{ container.value.command }}
+  when: (container.key in SERVICE_STATUS and
+        SERVICE_STATUS[container.key] == "started" )
+        and 'command' in container.value
+  ignore_errors: True
+

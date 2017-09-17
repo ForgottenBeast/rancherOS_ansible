@@ -1,0 +1,64 @@
+- name: "Create used mountpoints"
+  file: path={{ item }} state=directory
+  with_items: "{{ MOUNT_POINTS.hard_drives | union([MOUNT_POINTS.mhddfs]) }}"
+
+- name: "Copy rc.local"
+  tags:
+    - rancher_files
+  copy:
+    content: "{{ rclocal }}"
+    dest: /etc/rc.local
+    owner: root
+    mode: "0755"
+
+- name: "Install required software from repos"
+  apt:
+    update_cache: True
+    name: "{{ item }}"
+  with_items:
+    - mhddfs
+    - screen
+    - net-tools
+    - traceroute
+    - htop
+    - iputils-ping
+    - python-setuptools
+    - usbutils
+    - gcc
+
+- name: "Install python-pip"
+  easy_install:
+    name: pip
+    state: latest
+
+- name: "Install docker-py"
+  pip:
+    name: docker-py
+
+- name: "Apply rc.local"
+  tags: rancher_files
+  command: "/etc/rc.local"
+
+- name: "Copy vimrc"
+  tags:
+    - rancher_files
+  copy:
+    src: vimrc
+    dest: /root/.vimrc
+    owner: root
+    mode: "0764"
+
+- name: "Copy usb_reset sources"
+  tags:
+    - rancher_files
+  copy:
+    src: usb_reset.c
+    dest: ./usb_reset.c
+    owner: root
+    mode: "0644"
+
+- name: "Compile usb_reset.c and add it to path"
+  tags: rancher_files
+  shell: |
+    gcc usb_reset.c -o usb_reset
+    mv usb_reset /usr/bin/usb_reset

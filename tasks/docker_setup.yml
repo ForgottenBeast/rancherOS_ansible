@@ -1,0 +1,69 @@
+##################################################################
+# If you add files here remember to delete them in the last task #
+##################################################################
+
+- name: "Create docker volumes"
+  include: create_volumes.yml
+  tags:
+    - install
+    - docker_setup
+  with_items: "{{ rancher_volumes }}"
+
+- name: "Write vpn conf files"
+  copy:
+    src: "{{ item.value.endpoint }}_{{ item.value.service }}_{{ item.key }}.ovpn"
+    dest: "/tmp/{{ item.key }}.ovpn"
+    mode: "0777"
+  with_dict: "{{ VPN_SERVICES_CERTS }}"
+
+- name: "Create config files hierarchy"
+  file:
+    name: /tmp/{{ item.value.directory }}
+    state: directory
+    mode: "0777"
+  when: "'directory' in item.value"
+  with_dict: "{{ config_files }}"
+
+- name: "Copy config files to destination"
+  copy:
+    content: "{{ item.value.content }}"
+    dest: /tmp/{{ item.value.directory | default('') }}/{{ item.key }}
+    mode: "0764"
+  with_dict: "{{ config_files }}"
+
+- name: "Create tmp container tmpvol to copy files to volumes"
+  docker_container:
+    name: tmpvol
+    volumes: "{{ rancher_volumes | map('regex_replace','^(.*)$','\\1:/\\1')|list }}"
+    image: "{{ alpine_image }}"
+    entrypoint: "sleep 1000"
+
+- name: "Copy config files to their volumes"
+  include: copy_conf.yml
+  tags:
+    - 'rancher_install'
+    - 'rancher_docker_setup'
+  with_dict: "{{ config_files }}"
+  loop_control:
+   loop_var: conf_file
+
+- name: "Copy vpn certs to volumes"
+  command: docker cp /tmp/{{ item.key }}.ovpn tmpvol:/{{ item.key }}_vpn/vpn.conf
+  with_dict: "{{ VPN_SERVICES_CERTS }}"
+
+- name: "Remove tmpvol container"
+  docker_container:
+    name: tmpvol
+    state: absent
+
+- name: "Delete config files"
+  file:
+    name: "/tmp/{{ item.value.directory|default('/') }}/{{item.key}}"
+    state: absent
+  with_dict: "{{ config_files }}"
+
+- name: "Delete vpn services certs"
+  file:
+    name: /tmp/{{ item.key }}.ovpn
+    state: absent
+  with_dict: "{{ VPN_SERVICES_CERTS }}"

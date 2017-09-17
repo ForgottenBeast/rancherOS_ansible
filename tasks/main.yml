@@ -1,0 +1,43 @@
+- name: "Installing requirements and basic conf"
+  include: install.yml
+  tags: ['rancher_install']
+  become: True }
+
+- name: "Setting up docker environment"
+  include: docker_setup.yml
+  tags:
+    - 'rancher_install'
+    - 'rancher_docker_setup'
+
+- name: "Create virtual ip addresses"
+  command: ip addr add {{ item.value }} {{ item.key }}
+  become: True
+  with_dict: "{{ IP_ADDRESSES }}"
+
+- name: "Create required and present devices list"
+  tags: rancher_services
+  set_fact:
+    dev_list: []
+    req_dev: []
+
+- name: "Fill required devices list"
+  tags: rancher_services
+  set_fact:
+    req_dev: "{{ req_dev + item.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list }}"
+  with_dict: "{{ CONTAINERS }}"
+  when: "'devices' in item.value"
+
+- name: "Check devices presence"
+  tags: rancher_services
+  include: list_dev.yml
+  with_items: "{{ req_dev }}"
+
+
+- name: "Handling services"
+  include: services.yml
+  tags: rancher_services
+  with_dict: "{{ CONTAINERS }}"
+  when: container.value.devices is undefined or
+        container.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
+  loop_control:
+    loop_var: container
