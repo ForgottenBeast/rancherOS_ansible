@@ -52,6 +52,7 @@ config_files:
     #optional: should this conf file be in a directory?
     directory: whatever_config
     #in which volumes should this conf file be copied
+    content: "{{ config_file_from_vault }}"
     volumes:
       - "vol1_conf"
       - "vol2_conf"
