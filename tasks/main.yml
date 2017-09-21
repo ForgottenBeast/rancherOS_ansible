@@ -26,6 +26,7 @@
     req_dev: "{{ req_dev + item.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list }}"
   with_dict: "{{ CONTAINERS }}"
   when: "'devices' in item.value"
+  ignore_errors: True
 
 - name: "Check devices presence"
   tags: rancher_services
