@@ -69,17 +69,17 @@ rancher_volumes:
 #everything but image is optional
 CONTAINERS:
   #running container name
-  mycontainer:
-    #ip here from IP_ADDRESSES variable
-    ports: "192.168.0.28:80:80"
-    devices:
-      - "/dev/mydevice1:/dev/mydevice1"
-    image: "myrepo/myimage:multiarch"
-    volumes:
-        - "vol1_conf:/conf"
-        - "vol1_vpn:/vpn"
-    capabilities:
-      - MAKE_COFFEE
-    #WE ONLY RUN POST START COMMAND IF SERVICE IS EXPLICITLY STARTED
-    #in SERVICE_STATUS
-    command: "make_coffee --double-espresso"
+  #  mycontainer:
+#    #ip here from IP_ADDRESSES variable
+#    ports: "192.168.0.28:80:80"
+#    devices:
+#      - "/dev/mydevice1:/dev/mydevice1"
+#    image: "myrepo/myimage:multiarch"
+#    volumes:
+#        - "vol1_conf:/conf"
+#        - "vol1_vpn:/vpn"
+#    capabilities:
+#      - MAKE_COFFEE
+#    #WE ONLY RUN POST START COMMAND IF SERVICE IS EXPLICITLY STARTED
+#    #in SERVICE_STATUS
+#    command: "make_coffee --double-espresso"
