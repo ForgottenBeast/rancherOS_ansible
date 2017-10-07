@@ -16,6 +16,12 @@
     mode: "0777"
   with_dict: "{{ VPN_SERVICES_CERTS }}"
 
+- name: "Write vpn failsafe script"
+  copy:
+    src: vpnfailsafe.sh
+    dest: /tmp/vpnfailsafe.sh
+    mode: "0764"
+
 - name: "Create config files hierarchy"
   file:
     name: /tmp/{{ item.value.directory }}
@@ -47,8 +53,10 @@
   loop_control:
    loop_var: conf_file
 
-- name: "Copy vpn certs to volumes"
-  command: docker cp /tmp/{{ item.key }}.ovpn tmpvol:/{{ item.key }}_vpn/vpn.conf
+- name: "Copy vpn certs and failsafe script to volumes"
+  command: |
+    docker cp /tmp/{{ item.key }}.ovpn tmpvol:/{{ item.key }}_vpn/vpn.conf
+    docker cp /tmp/vpnfailsafe.sh tmpvol:/{{ item.key }}_vpn/vpnfailsafe.sh
   with_dict: "{{ VPN_SERVICES_CERTS }}"
 
 - name: "Remove tmpvol container"
