@@ -76,7 +76,7 @@ update_resolv() {
                 esac
             done
             if [[ -n "$ns" ]]; then
-                echo -e "${domains/ /search }\n${ns// /$'\n'nameserver }"|resolvconf -xa "$dev"
+                echo -e "${domains/ /search }\n${ns// /$'\n'nameserver }"|resolvconf -a "$dev"
             else
                 echo "$0: WARNING: no DNS was pushed by the VPN server, this could cause a DNS leak" >&2
             fi;;
