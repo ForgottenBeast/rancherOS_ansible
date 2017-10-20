@@ -1,0 +1,14 @@
+- name: "Create compose folder"
+  file:
+    name: /tmp/{{service.key}}
+    state: directory
+
+- name: "Copy docker-compose"
+  template:
+    src: "{{service.key}}.j2"
+    dest: /tmp/{{service.key}}/docker-compose.yml
+
+- name: "Update service status"
+  docker_service:
+    state: present
+    project_src: /tmp/{{service.key}}

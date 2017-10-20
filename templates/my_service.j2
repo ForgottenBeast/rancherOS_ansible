@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  alpine:
+    image: alpine:latest
+    environnment:
+      var1: {{service.docker_compose_variables.var1}}
+      {{ for i in service.docker_compose_variables.var2 }}
+      var{{forloopcounter0}}: {{i}}

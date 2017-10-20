@@ -24,7 +24,7 @@
   tags: rancher_services
   set_fact:
     req_dev: "{{ req_dev + item.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list }}"
-  with_dict: "{{ CONTAINERS }}"
+  with_dict: "{{ CONTAINERS|combine(SERVICES) }}"
   when: "'devices' in item.value"
   ignore_errors: True
 
@@ -34,7 +34,7 @@
   with_items: "{{ req_dev }}"
 
 
-- name: "Handling services"
+- name: "Handling containers"
   include: services.yml
   tags: rancher_services
   with_dict: "{{ CONTAINERS }}"
@@ -42,3 +42,11 @@
         container.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
   loop_control:
     loop_var: container
+
+- name: "Handling services"
+  include: compose.yml
+  with_dict: "{{SERVICES}}"
+  when: service.value.devices is undefined or
+        service.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
+  loop_control:
+    loop_var: service

@@ -83,3 +83,16 @@ CONTAINERS:
 #    #WE ONLY RUN POST START COMMAND IF SERVICE IS EXPLICITLY STARTED
 #    #in SERVICE_STATUS
 #    command: "make_coffee --double-espresso"
+
+############SERVICES
+#started from a dockerfile
+
+SERVICES:
+  my_service:
+#   devices:
+#     - /dev/net/whatever
+    docker_compose_variables:
+      var1: qwerty
+      var2:
+       - foo
+       - barr
