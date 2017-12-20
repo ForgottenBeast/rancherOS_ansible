@@ -25,6 +25,7 @@
     - python-setuptools
     - usbutils
     - gcc
+    - samba
 
 - name: "Install python-pip"
   easy_install:
