@@ -50,3 +50,21 @@
         service.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
   loop_control:
     loop_var: service
+
+- name: "Copy smb snippet"
+  tags: rancher_install
+  copy:
+    content: "{{SAMBA_CONF}}"
+    dest: /tmp/smb
+
+- name: "Update smb.conf"
+  tags: rancher_install
+  become: True
+  shell: |
+    cat /tmp/smb >> /etc/samba/smb.conf
+    
+- name: "Restart samba daemon"
+  tags: rancher_install
+  become: True
+  shell: |
+    /etc/init.d/smbd restart
