@@ -1,7 +1,7 @@
 - name: "Installing requirements and basic conf"
   include: install.yml
   tags: ['rancher_install']
-  become: True }
+  become: True
 
 - name: "Setting up docker environment"
   include: docker_setup.yml
