@@ -96,3 +96,12 @@ SERVICES:
       var2:
        - foo
        - barr
+
+#Unauthenticated CIFS shares
+#will be appended to smb.conf
+SAMBA_CONF: |
+  [torrents]
+      path=/my/path
+      browseable=yes
+      read only = yes
+      guest ok = yes
