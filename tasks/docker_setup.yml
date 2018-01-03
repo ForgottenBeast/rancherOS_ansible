@@ -54,9 +54,10 @@
    loop_var: conf_file
 
 - name: "Copy vpn certs and failsafe script to volumes"
-  command: |
+  shell: |
     docker cp /tmp/{{ item.key }}.ovpn tmpvol:/{{ item.key }}_vpn/vpn.conf
     docker cp /tmp/vpnfailsafe.sh tmpvol:/{{ item.key }}_vpn/vpnfailsafe.sh
+
   with_dict: "{{ VPN_SERVICES_CERTS }}"
 
 - name: "Remove tmpvol container"
