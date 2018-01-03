@@ -48,18 +48,3 @@
     dest: /root/.vimrc
     owner: root
     mode: "0764"
-
-- name: "Copy usb_reset sources"
-  tags:
-    - rancher_files
-  copy:
-    src: usb_reset.c
-    dest: ./usb_reset.c
-    owner: root
-    mode: "0644"
-
-- name: "Compile usb_reset.c and add it to path"
-  tags: rancher_files
-  shell: |
-    gcc usb_reset.c -o usb_reset
-    mv usb_reset /usr/bin/usb_reset
