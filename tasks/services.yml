@@ -6,6 +6,7 @@
     capabilities: "{{ container.value.capabilities|default(omit) }}"
     volumes: "{{ container.value.volumes |default(omit)}}"
     image: "{{ container.value.image }}"
+    network_mode: "{{ container.value.network_mode|default(omit)}}"
     devices: "{{ container.value.devices|default(omit) }}"
 
 - name: "Run post start commands"
