@@ -15,12 +15,14 @@
     dest: "/tmp/{{ item.key }}.ovpn"
     mode: "0777"
   with_dict: "{{ VPN_SERVICES_CERTS }}"
+  when: VPN_SERVICES_CERTS is defined
 
 - name: "Write vpn failsafe script"
   copy:
     src: vpnfailsafe.sh
     dest: /tmp/vpnfailsafe.sh
     mode: "0764"
+  when: VPN_SERVICES_CERTS is defined
 
 - name: "Create config files hierarchy"
   file:
@@ -57,8 +59,8 @@
   shell: |
     docker cp /tmp/{{ item.key }}.ovpn tmpvol:/{{ item.key }}_vpn/vpn.conf
     docker cp /tmp/vpnfailsafe.sh tmpvol:/{{ item.key }}_vpn/vpnfailsafe.sh
-
   with_dict: "{{ VPN_SERVICES_CERTS }}"
+  when: VPN_SERVICE_CERTS is defined
 
 - name: "Remove tmpvol container"
   docker_container:
@@ -76,3 +78,4 @@
     name: /tmp/{{ item.key }}.ovpn
     state: absent
   with_dict: "{{ VPN_SERVICES_CERTS }}"
+  when: VPN_SERVICE_CERTS is defined

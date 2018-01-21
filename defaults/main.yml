@@ -39,10 +39,10 @@ MOUNT_POINTS:
 
 ################################################################################
 ####################CERTIFICATES for vpn enabled services
-VPN_SERVICES_CERTS:
-  monservice1:
-    endpoint: "endpoint inventory_hostname"
-    service: "servicename"
+#VPN_SERVICES_CERTS:
+#    monservice1:
+#    endpoint: "endpoint inventory_hostname"
+#    service: "servicename"
     #service name such as vpnd, the one used on the remote end
 
 ###################CONFIGURATION FILES
