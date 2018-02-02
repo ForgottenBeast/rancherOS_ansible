@@ -12,8 +12,8 @@
     mode: "0755"
 
 - name: "Install required software from repos"
-  apt:
-    update_cache: True
+  package:
+    state: present
     name: "{{ item }}"
   with_items:
     - mhddfs
