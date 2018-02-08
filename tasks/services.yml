@@ -1,3 +1,11 @@
+- name: "Pull new image if necessary"
+  when: "'pull' in container.value and container.value.pull"
+  docker_image:
+    name: "{{ container.value.image }}"
+    state: present
+    force: True
+    pull: True
+
 - name: "Update containers status"
   docker_container:
     name: "{{ container.key }}"

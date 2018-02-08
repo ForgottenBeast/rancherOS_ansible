@@ -72,6 +72,8 @@ CONTAINERS:
   #  mycontainer:
 #    #ip here from IP_ADDRESSES variable
 #    ports: "192.168.0.28:80:80"
+#    #if the container is not built locally force pull new image
+#    pull: True
 #    devices:
 #      - "/dev/mydevice1:/dev/mydevice1"
 #    image: "myrepo/myimage:multiarch"
