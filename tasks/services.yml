@@ -1,11 +1,3 @@
-- name: "Pull new image if necessary"
-  when: "'pull' in container.value and container.value.pull"
-  docker_image:
-    name: "{{ container.value.image }}"
-    state: present
-    force: True
-    pull: True
-
 - name: "Update containers status"
   docker_container:
     name: "{{ container.key }}"
@@ -13,6 +5,7 @@
     state: "{{ SERVICE_STATUS[container.key] | default('started') }}"
     capabilities: "{{ container.value.capabilities|default(omit) }}"
     volumes: "{{ container.value.volumes |default(omit)}}"
+    pull: "{{container.value.pull|default(omit)}}"
     image: "{{ container.value.image }}"
     network_mode: "{{ container.value.network_mode|default(omit)}}"
     devices: "{{ container.value.devices|default(omit) }}"
