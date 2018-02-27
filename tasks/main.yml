@@ -44,12 +44,18 @@
     loop_var: container
 
 - name: "Handling services"
+  tags: rancher_services
   include: compose.yml
   with_dict: "{{SERVICES}}"
   when: service.value.devices is undefined or
         service.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
   loop_control:
     loop_var: service
+
+- name: "Cleaning up unused containers, networks and images"
+  tags: rancher_services
+  command: >
+    docker system prune -a -f
 
 - name: "Copy smb snippet"
   tags: rancher_install
