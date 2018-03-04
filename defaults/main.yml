@@ -67,7 +67,7 @@ rancher_volumes:
 
 ####################CONTAINERS
 #everything but image is optional
-CONTAINERS:
+#CONTAINERS:
   #running container name
   #  mycontainer:
 #    #ip here from IP_ADDRESSES variable
@@ -90,15 +90,15 @@ CONTAINERS:
 ############SERVICES
 #started from a dockerfile
 
-SERVICES:
-  my_service:
-#   devices:
-#     - /dev/net/whatever
-    docker_compose_variables:
-      var1: qwerty
-      var2:
-       - foo
-       - barr
+#SERVICES:
+#  my_service:
+#    devices:
+#      - /dev/net/whatever
+#    docker_compose_variables:
+#      var1: qwerty
+#      var2:
+#       - foo
+#       - barr
 
 #Unauthenticated CIFS shares
 #will be appended to smb.conf
