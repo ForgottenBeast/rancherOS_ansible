@@ -37,18 +37,20 @@
 - name: "Handling containers"
   include: services.yml
   tags: rancher_services
-  with_dict: "{{ CONTAINERS }}"
+  with_dict: "{{ CONTAINERS |default({})}}"
   when: container.value.devices is undefined or
-        container.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
+        container.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list) and
+        CONTAINERS is defined
   loop_control:
     loop_var: container
 
 - name: "Handling services"
   tags: rancher_services
   include: compose.yml
-  with_dict: "{{SERVICES}}"
+  with_dict: "{{SERVICES|default({})}}"
   when: service.value.devices is undefined or
-        service.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list)
+        service.value.devices|map('regex_replace','^([^:]+):[^:]+$','\\1')|list|issubset(dev_list) and
+        SERVICES is defined
   loop_control:
     loop_var: service
 
