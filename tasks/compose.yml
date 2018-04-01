@@ -1,14 +1,17 @@
 - name: "Create compose folder"
+  tags: rancher_services
   file:
     name: /tmp/{{service.key}}
     state: directory
 
 - name: "Copy docker-compose"
+  tags: rancher_services
   template:
     src: "{{service.key}}.j2"
     dest: /tmp/{{service.key}}/docker-compose.yml
 
 - name: "Update service status"
+  tags: rancher_services
   docker_service:
     state: present
     project_src: /tmp/{{service.key}}

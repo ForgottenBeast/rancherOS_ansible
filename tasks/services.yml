@@ -1,4 +1,5 @@
 - name: "Update containers status"
+  tags: ['rancher_services']
   docker_container:
     name: "{{ container.key }}"
     ports: "{{ container.value.ports|default(omit) }}"
@@ -11,7 +12,9 @@
     devices: "{{ container.value.devices|default(omit) }}"
 
 - name: "Run post start commands"
-  tags: rancher_post_start
+  tags: 
+    - rancher_services'
+    - rancher_post_start
   command: docker exec -i {{ container.key }} {{ container.value.command }}
   when: (container.key in SERVICE_STATUS and
         SERVICE_STATUS[container.key] == "started" )
