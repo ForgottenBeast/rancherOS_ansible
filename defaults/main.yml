@@ -1,9 +1,5 @@
 #alpine image used for volume manipulation
 alpine_image: forgottenbeast/alpine:multiarch
-#
-###################CIDR of the network that will be able to access vpn enabled
-#containers
-HOST_NET: "192.168.0.0/24"
 
 #############################virtual IPs and interface to assign containers to
 IP_ADDRESSES:
@@ -21,7 +17,6 @@ IP_ADDRESSES:
 #WE ONLY RUN POST START COMMAND IF SERVICE IS EXPLICITLY STARTED
 SERVICE_STATUS:
   sshd: started
-  vpnd: started
 
 #  vpnd: stop
 #tells ansible what to do with this specific service, if unset and services
@@ -37,13 +32,6 @@ MOUNT_POINTS:
     - "/mnt/hd2"
   mhddfs: "/mnt/all_hds"
 
-################################################################################
-####################CERTIFICATES for vpn enabled services
-#VPN_SERVICES_CERTS:
-#    monservice1:
-#    endpoint: "endpoint inventory_hostname"
-#    service: "servicename"
-    #service name such as vpnd, the one used on the remote end
 
 ###################CONFIGURATION FILES
 config_files: {}
