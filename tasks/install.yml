@@ -23,8 +23,6 @@
     - htop
     - iputils-ping
     - python-setuptools
-    - usbutils
-    - gcc
     - samba
 
 - name: "Install python-pip"
