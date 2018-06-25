@@ -1,9 +1,12 @@
-- name: "Check if device {{ item }} is present"
-  stat:
-    path: "{{ item }}"
-  register: device
+- block:
+  - name: "Check if device {{ item }} is present"
+    stat:
+      path: "{{ item }}"
+    register: device
+  
+  - name: "Adding device to list"
+    set_fact:
+      dev_list: "{{ dev_list + [item] }}"
+    when: device.stat.exists
 
-- name: "Adding device to list"
-  set_fact:
-    dev_list: "{{ dev_list + [item] }}"
-  when: device.stat.exists
+  tags: rancher_services

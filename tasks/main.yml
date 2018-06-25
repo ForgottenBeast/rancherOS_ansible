@@ -45,6 +45,7 @@
     loop_var: container
 
 - name: "Handling services"
+  tags: rancher_services
   include_tasks: compose.yml
   with_dict: "{{SERVICES|default({})}}"
   when: service.value.devices is undefined or
