@@ -30,9 +30,9 @@
     name: pip
     state: latest
 
-- name: "Install docker-py"
+- name: "Install docker for python"
   pip:
-    name: docker-py
+    name: docker
 
 - name: "Apply rc.local"
   tags: rancher_files
